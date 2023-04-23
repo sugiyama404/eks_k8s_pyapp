@@ -1,0 +1,219 @@
+https://280233053143.signin.aws.amazon.com/console
+280233053143
+new_user
+X-&hZ%6^1
+km9JYJxCLLqjy8q@
+
+kubectl version --client --output=yaml
+
+kubectl run nginx --image nginx:latest -o yaml --dry-run > nginx.yml
+
+couldn't get current server API group list:
+Get "https://127.0.0.1:50844/api?timeout=32s":
+dial tcp 127.0.0.1:50844: connect: connection refused
+The connection to the server 127.0.0.1:50844 was refused -
+did you specify the right host or port?
+
+cat ~/.kube/config
+
+kubectl config get-contexts
+
+kubectlのconfig設定
+kubectl config use-context docker-desktop
+設定の確認
+kubectl config current-context
+kubectl get pods --namespace=kube-system
+docker-desktopというNamespaceを作成する
+kubectl create namespace docker-desktop
+kubectl get namespace
+kubectl config set-context --current --namespace=docker-desktop
+kubectl config get-contexts
+kubectl delete namespace docker-default
+
+kubectl apply -f nginx.yml
+kubectl get pods
+kubectl get svc
+kubectl port-forward nginx 8080:80
+http://localhost:8080
+
+kubectl create service nodeport nginx --tcp=80:80 --dry-run -o yml
+
+kubectl get svc
+80:31868
+kubectl get node -o wide
+http://54.95.35.222:31868/
+
+http://52.199.199.192
+
+eksctl create cluster -f cluster.yaml
+eksctl update cluster -f cluster.yaml
+eksctl delete cluster -f cluster.yaml
+eksctl get cluster -f cluster.yaml
+
+
+http:35.78.121.189:32602/
+
+eksctl delete nodegroup -f cluster.yaml --approve
+eksctl create nodegroup -f cluster.yaml
+
+k8s-default-nginx-70a6b912f9-608957590.ap-northeast-1.elb.amazonaws.com
+
+kubectl delete -f nginx.yml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
+wget https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/download/v2.4.7/v2_4_7_full.yaml
+
+
+kubectl apply -f nginx.yaml
+kubectl get pods --all-namespaces
+kubectl create ingress nginx --dry-run -o yaml --rule="/*"=nginx:80 > nginx-ingress.yaml
+kubectl apply -f nginx-ingress.yaml
+
+kubectl delete -f nginx.yaml
+kubectl apply -f nginx.yaml
+kubectl describe pods nginx
+
+kubectl exec nginx -it /bin/sh
+
+rm /usr/share/nginx/html/index.html
+
+kubectl create deployment nginx --image nginx:latest -o yaml --dry-run=client
+kubectl get deployments.apps
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.3/components.yaml
+
+kubectl top node
+
+kubectl autoscale deployment nginx --cpu-percent 50 --min 1 --max 10
+kubectl get horizontalpodautoscaler.autoscaling
+
+kubectl apply -f cluster-autoscaler-autodiscover.yaml
+
+kubectl get pods -n kube-system
+
+kubectl create configmap eks-study --from-env-file=.env
+kubectl describe configmaps eks-study
+
+kubectl create secret generic eks-study --from-literal=DB_USER=root --from-literal=DB_PASSWORD=password
+
+kubectl describe secret eks-study
+kubectl get secret eks-study -o yaml
+
+echo 'cGFzc3dvcmQ=' | base64 --decode
+
+Error: no output "VPC" in stack "eksctl-eks-study-cluster-nodegroup-eks-study-cluster"
+
+FROM node:14-alpine
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD [ "node", "app.js" ]
+
+docker compose exec nodejs bash
+
+npm install express --save
+http://localhost:3000
+
+docker build -t node-web-app:latest .
+
+docker run -p 3000:3000 node-web-app:latest
+
+aws sts get-caller-identity
+{
+    "UserId": "AIDAUCPZRBPLZC25HEX2K",
+    "Account": "280233053143",
+    "Arn": "arn:aws:iam::280233053143:user/new_user"
+}
+docker container stop $(docker container ls --filter "ancestor=node-web-app:latest" -q)
+
+[AWSアカウントID].dkr.ecr.[リージョン名].amazonaws.com/[ECRリポジトリ名]:[任意の識別子]
+docker build -t 280233053143.dkr.ecr.ap-northeast-1.amazonaws.com/node-web-app:0.0.1
+
+terraform init
+terraform apply --auto-approve
+terraform destroy --auto-approve
+
+kubectl create deployment node-web-app --image 280233053143.dkr.ecr.ap-northeast-1.amazonaws.com/node-web-app:0.0.1 -o yaml --dry-run=client
+
+kubectl apply -f node-web-app.yaml
+kubectl get pods -w
+
+kubectl port-forward node-web-app-577f87d577-qhzsj 3000:3000
+
+eksctl get cluster
+
+resource mapping not found for name: "aws-load-balancer-serving-cert"
+namespace: "kube-system" from "v2_4_7_full.yaml": no matches for kind "Certificate"
+in version "cert-manager.io/v1"
+ensure CRDs are installed first
+resource mapping not found for name: "aws-load-balancer-selfsigned-issuer"
+namespace: "kube-system" from "v2_4_7_full.yaml": no matches for kind "Issuer"
+in version "cert-manager.io/v1"
+ensure CRDs are installed first
+
+kubectl api-versions  | grep apps
+
+kubectl apply -f infra/kubernetes/v2_4_7_full.yaml
+kubectl apply -f infra/kubernetes/nginx-ingress.yaml
+
+sleep 6; echo 'hi'
+
+docker build -t pyapp:latest .
+
+cd ..
+kubectl apply -f infra/kubernetes/ingress.yaml
+kubectl apply -f infra/kubernetes/pyapp.yaml
+
+
+{
+    "host": "ip-10-0-11-176",
+    "ident": "kubelet",
+    "message": "E0422 07:35:59.152482    3191 pod_workers.go:965] \"Error syncing pod, skipping\" err=\"failed to \\\"StartContainer\\\" for \\\"pyapp\\\" with ImagePullBackOff: \\\"Back-off pulling image \\\\\\\"pyapp:latest\\\\\\\"\\\"\" pod=\"default/pyapp\" podUID=ecb695a2-2c67-4ec8-94ef-0d5228bd3fd4",
+    "az": "ap-northeast-1a",
+    "ec2_instance_id": "i-05c5a832ff0ca49b5"
+}
+
+
+docker build -t 280233053143.dkr.ecr.ap-northeast-1.amazonaws.com/pyapp:latest .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

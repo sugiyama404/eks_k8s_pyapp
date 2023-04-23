@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  app:
+    build: ./app
+    container_name: "flask"
+    volumes:
+      - ./app:/root/opt
+    tty: true
+    environment:
+      - HOST=mysql
+      - DBNAME=todoproject
+    ports:
+      - 8080:8080
+  mysql:
+    build: ./mysql
+    container_name: mysql_host
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todoproject
+      MYSQL_USER: rustrust
+      MYSQL_PASSWORD: rustrust
+      TZ: 'Asia/Tokyo'
+    command: mysqld
+    volumes:
+      - ./mysql/init/:/docker-entrypoint-initdb.d/
+    ports:
+      - 3306:3306
